@@ -28,6 +28,12 @@ applyTo: '**/*.go,**/go.mod,**/go.sum'
 - In the Bubble Tea framework, the approach for managing "sub-models" (nested components or views) is to embed them within a main model and delegate their Update and View methods. This allows complex terminal user interfaces (TUIs) to be built with clean, modular code following the Elm architecture.
 - No coupling of UI code to domain code. A nice test: Can you delete the UI package entirely and keep the domain + services working? If yes, you’re not coupled.
 
+## General UI/UX Guidelines
+- Consistent keybindings across views (e.g., `q` to quit, `h` for help).
+- Use arrow keys for navigation where applicable.
+- Clear visual hierarchy using lipgloss styles (colors, borders, spacing).  
+- Responsive layout that adapts to different terminal sizes.
+- Accessibility considerations (e.g., color contrast, keyboard navigation).
 
 ## UI Component Instructions for Bubble Tea TUI Layout
 Below is a UI component “kit” for a Bubble Tea TUI application UI, with interfaces that *expand* into drill down views. I’m describing components (panels/widgets/screens), what they show, and *when/why* they appear.
@@ -36,7 +42,7 @@ The goal is to create a coherent, discoverable, and functional UI that supports 
 
 ###  Persistent “chrome” (always visible)
 
-These are the stable pieces that make the application user interface consistent.
+These are the stable pieces that make the application user interface consistent. The application UI expands to fill the terminal window.
 
 #### A. Top status bar (always)
 **Purpose:** At-a-glance state and critical information.
@@ -44,35 +50,44 @@ These are the stable pieces that make the application user interface consistent.
 - Current date/time + Application mode or status (e.g., Paused/Running)
 - Active systems summary, metrics, statuses 
 - Alerts counter (e.g., 3 critical, 7 info)
-**Used when:** Always. This is the “instrument panel.”
+**Used when:** Always. This is the “instrument panel.”  
+**Layout:** Responsive to terminal width, and height showing/hiding elements as needed. Min height is 1 line. Maximum height is 10 percent of terminal height.
 
 #### B. Navigation strip (always)
 **Purpose:** Fast switching between major views.
 **Implementation:** Tabs or hotkeys (e.g., `1-9`, `g` to open a “Go To” list). Should be on 2 lines. First line is top-level views (Run, Setup, New, Load, Save, Quit) or sub-views (Dashboard, Entities, etc.)  Second line is the breadcrumb that update based on the first line selection.
-**Used when:** Always.
+**Used when:** Always. 
+**Layout:** Responsive to terminal width, and height showing/hiding elements as needed. Min height is 1 line. Maximum height is 5 percent of terminal height. Located below Top status bar.
 
 #### C. Main workspace (always)
 **Purpose:** Where the selected view renders (dashboard/Entities List/etc.).
-**Used when:** Always.
+**Used when:** Always. 
+**Layout:** Responsive to terminal width, and height. Located below Navigation strip, above Bottom event log + notifications, to the left of the inspector drawer. Expand to fill remaining space, horizontally and vertically.
+
 
 #### D. Right-side inspector drawer (contextual, but frequently visible)
 **Purpose:** Details for the currently selected entity (job, order, project, etc.).
 **Used when:** When you select a row/node on any screen. Collapsible with `i`.
+**Layout:** Expand to fill remaining space vertically. up to 30 percent of terminal width. Located below Navigation strip, above Bottom event log + notifications, to the right of the Main workspace.
+
 
 #### E. Bottom event log + notifications (always)
 **Purpose:** Explain “why numbers moved” and provide narrative.
 - Rolling log
 - Click/enter on an event to open details + suggested actions
-**Used when:** Always; 
+**Used when:** Always. 
+**Layout:** Responsive to terminal width, and height showing/hiding elements as needed. Min height is 1 line. Maximum height is 20 percent of terminal height. Located below Main workspace and Right-side inspector drawer. 
 
 #### F. Help/controls footer (always)
 **Purpose:** Discoverability in a TUI.
 - Shows available keys for the current view (Bubble Tea `help` style)
 **Used when:** Always (toggle with `?`).
+**Layout:** Responsive to terminal width, and height showing/hiding elements as needed. Min height is 1 line. Maximum height is 5 percent of terminal height. Located at the very bottom of the terminal window.
 
 ### Contextual Views / Modals / Screens (appear as needed)
 
 These views appear based on user actions or application state.
+
 #### G. Entity Detail View (contextual)
 **Purpose:** Show detailed information about a selected entity.
 **Trigger:** Selecting an entity from a list or graph.
@@ -80,6 +95,7 @@ These views appear based on user actions or application state.
 - Comprehensive details (attributes, status, history)
 - Action buttons (edit, delete, etc.)
 **Used when:** User selects an entity.
+
 #### H. Settings Modal (contextual)
 **Purpose:** Configure application settings.
 **Trigger:** User presses `s` or selects "Settings" from a menu.
@@ -87,6 +103,7 @@ These views appear based on user actions or application state.
 - Various configuration options (toggles, dropdowns, input fields)
 - Save/Cancel buttons
 **Used when:** User wants to change settings.
+
 #### I. Confirmation Dialog (contextual)
 **Purpose:** Confirm critical actions.
 **Trigger:** User initiates a potentially destructive action (delete, exit without saving).
@@ -94,6 +111,7 @@ These views appear based on user actions or application state.
 - Warning message
 - Confirm/Cancel buttons
 **Used when:** User performs a critical action.
+
 #### J. Help Overlay (contextual)
 **Purpose:** Provide detailed help and documentation.
 **Trigger:** User presses `?` or selects "Help" from a menu.
@@ -101,6 +119,7 @@ These views appear based on user actions or application state.
 - Comprehensive help text
 - Navigation links to different help topics
 **Used when:** User requests help.
+
 #### K. Search Modal (contextual)
 **Purpose:** Search for entities or information within the application.
 **Trigger:** User presses `/` or selects "Search" from a menu.
@@ -108,6 +127,7 @@ These views appear based on user actions or application state.
 - Search input field
 - Search results list
 **Used when:** User wants to find something quickly.
+
 #### L. Notification Pop-up (contextual)
 **Purpose:** Alert the user to important events or updates.
 **Trigger:** Application generates a notification (e.g., task completed, error occurred).
@@ -115,6 +135,7 @@ These views appear based on user actions or application state.
 - Notification message
 - Dismiss button
 **Used when:** Important events occur.
+
 #### M. Wizard/Step-by-Step Modal (contextual)
 **Purpose:** Guide the user through multi-step processes.
 **Trigger:** User initiates a process that requires multiple steps (e.g., setup, onboarding).
@@ -122,6 +143,7 @@ These views appear based on user actions or application state.
 - Step indicators
 - Navigation buttons (Next, Back, Finish)
 **Used when:** User starts a multi-step process.
+
 #### N. Data Visualization View (contextual)
 **Purpose:** Display charts, graphs, or other visual data representations.
 **Trigger:** User selects a data visualization option from a menu or dashboard.
@@ -129,6 +151,7 @@ These views appear based on user actions or application state.
 - Various charts/graphs
 - Filters and customization options
 **Used when:** User wants to analyze data visually.
+
 #### O. Error Modal (contextual)
 **Purpose:** Inform the user of errors or issues.
 **Trigger:** Application encounters an error that requires user attention.
@@ -136,9 +159,4 @@ These views appear based on user actions or application state.
 - Error message
 - Suggested actions or solutions
 **Used when:** An error occurs that needs to be communicated to the user.
-### General UI/UX Guidelines
-- Consistent keybindings across views (e.g., `q` to quit, `h` for help).
-- Clear visual hierarchy using lipgloss styles (colors, borders, spacing).  
-- Responsive layout that adapts to different terminal sizes.
-- Accessibility considerations (e.g., color contrast, keyboard navigation).
-- Regularly test the UI with real users to gather feedback and improve usability.
+

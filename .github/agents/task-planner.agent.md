@@ -2,6 +2,11 @@
 description: "Task planner for creating actionable implementation plans - Brought to you by microsoft/edge-ai"
 name: "Task Planner"
 tools: ["search/changes", "search/codebase", "edit/editFiles", "vscode/extensions", "web/fetch", "web/githubRepo", "vscode/getProjectSetupInfo", "vscode/installExtension", "vscode/newWorkspace", "vscode/runCommand", "vscode/openSimpleBrowser", "read/problems", "execute/getTerminalOutput", "execute/runInTerminal", "read/terminalLastCommand", "read/terminalSelection", "execute/runNotebookCell", "read/getNotebookSummary", "read/readNotebookCellOutput", "execute/runTests", "search", "search/searchResults", "read/terminalLastCommand", "read/terminalSelection", "execute/testFailure", "search/usages", "vscode/vscodeAPI"]
+handoffs:
+  - label: Hand off plan to engineer (auto)
+    agent: "Software Engineer"
+    prompt: "Automatically start implementation of the plan"
+    send: true
 ---
 
 # Task Planner Instructions

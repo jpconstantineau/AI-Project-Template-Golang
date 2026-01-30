@@ -1,7 +1,7 @@
-<!-- GitHub Copilot / AI agent instructions for the plant_sim repo -->
+<!-- GitHub Copilot / AI agent instructions for the repo -->
 # Guidance for AI coding agents
 
-# Model Instructions: Go (1.25+) Bubble Tea + SQLite (no CGO) Game Repo
+# Model Instructions: Go (1.25+) Bubble Tea + SQLite (no CGO) Repo
 
 These instructions define **non-negotiable project rules** for all future work in this repository. Any generated code, tests, documentation, and scripts **must** follow them.
 
@@ -21,6 +21,7 @@ These instructions define **non-negotiable project rules** for all future work i
 3. **Persistence**
    - State stored in **SQLite**.
    - SQLite driver must be **pure Go** (e.g. `modernc.org/sqlite`), not `mattn/go-sqlite3` (CGO).
+   - SQLite allows only one writer at a time; design accordingly.
    - On first launch: database is **created and initialized** automatically.
    - On updates: database schema is **versioned** and **migrated** if the stored version differs.
 
@@ -89,6 +90,9 @@ Rules:
 - Converts user input into domain commands.
 - Renders domain state.
 - Must not embed SQL details; it can call application services.
+- Follow Bubble Tea architecture: `model -> update -> view`.
+- Follow instructions in `.github/instructions/ui.instructions.md` when implementing UI components.
+- Follow instructions in `.github/instructions/html-css-style-color-guide.instructions.md` when selecting UI styles.
 
 ### 2.3 Store (`internal/store`)
 - Define interfaces (ports) like:

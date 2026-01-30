@@ -24,6 +24,15 @@ Follow idiomatic Go practices and community standards when writing Go code. Thes
 - Write comments in English by default; translate only upon user request
 - Avoid using emoji in code and comments
 
+## Project Setup
+- run `go mod init <project-name>` to initialize Go Project
+- scaffold project structure with internal/, pkg/, cmd/, and scripts/ directories
+- scaffold boilerplate main.go file in cmd/
+- run `go mod tidy` to clean up dependencies
+- create build, run and test scripts in scripts/` directory when setting up project
+- run build and test scripts and fix any failures before calling project setup complete  
+
+
 ## Naming Conventions
 
 ### Packages
